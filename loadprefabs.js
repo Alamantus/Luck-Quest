@@ -59,6 +59,9 @@ var ani_die6 = OS.A.Add("Die Side 6", 150, 150, 1, 1, 0, 150 * 5, 0);
 var pr_Die = OS.P.Add("Die", 0, 0, "images/sheet_die.png", "images/mask_die.png", [ani_dieRoll, ani_die1, ani_die2, ani_die3, ani_die4, ani_die5, ani_die6]);
 pr_Die.solid = true;
 
+pr_Die.dragOffset = { x: 0, y: 0 }
+pr_Die.isDragging = false;
+
 pr_Die.hasRolled = false;
 pr_Die.isRolling = false;
 pr_Die.rollTime = 0;
@@ -145,6 +148,30 @@ pr_Die.KeepInsideCamera = function ()
     }
 }
 
+pr_Die.Drag = function () {
+    this.isDragging = false;
+    
+    if (!this.isRolling)
+    {
+        if (this.Clicked(OS.mouse.leftDown))
+        {
+            this.dragOffset.x = this.x - OS.mouse.x;
+            this.dragOffset.y = this.y - OS.mouse.y;
+        }
+        
+        if (this.Clicked(OS.mouse.left))
+        {
+            this.isDragging = true;
+            this.x = OS.mouse.x + this.dragOffset.x;
+            this.y = OS.mouse.y + this.dragOffset.y;
+        }
+        
+        if (OS.mouse.leftUp) {
+            this.isDragging = false;
+        }
+    }
+}
+
 pr_Die.DoFirst = function ()
 {
     this.ResetRoll();
@@ -157,29 +184,50 @@ pr_Die.BeforeDo = function ()
 
 pr_Die.Do = function ()
 {
-    if (this.Clicked(OS.mouse.rightDown))
+    if (!this.isDragging)
     {
-        this.ResetRoll();
-    }
-    
-    if (!this.hasRolled)
-    {
-        if (this.Clicked(OS.mouse.leftDown))
+        if (this.Clicked(OS.mouse.rightDown))
         {
-            this.DoRoll();
+            this.ResetRoll();
         }
-    }
-    if (this.isRolling)
-    {
-        this.RotateImage(this.speed * 2);
+        
+        if (!this.hasRolled)
+        {
+            if (this.Clicked(OS.mouse.leftDown))
+            {
+                this.DoRoll();
+            }
+        }
+        if (this.isRolling)
+        {
+            this.RotateImage(this.speed * 2);
+        }
+        
+        this.SimpleMove(this.speed * this.forward.x, this.speed * this.forward.y);
     }
     
-    this.SimpleMove(this.speed * this.forward.x, this.speed * this.forward.y);
+    this.Drag();
 }
 
 pr_Die.AfterDo = function ()
 {
     this.SetSideImage();
+    
+    /* if (this.MouseIsOver() && !this.isRolling)
+    {
+        if (this.hasRolled)
+        {
+            OS.canvas.style.cursor = "move";
+        }
+        else
+        {
+            OS.canvas.style.cursor = "pointer"
+        }
+    }
+    else if (OS.canvas.style.cursor != "default")
+    {
+        OS.canvas.style.cursor = "default";
+    } */
 }
 //#endregion
 
