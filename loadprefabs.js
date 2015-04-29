@@ -2,6 +2,7 @@
 var pr_Card = OS.P.Add("Card", 0, 0, "debug_card.png", "debug_card.png");
 
 pr_Card.dragOffset = { x: 0, y: 0 }
+pr_Card.isSelected = false;
 pr_Card.isDragging = false;
 
 pr_Card.cardDetails = { type: "none" }
@@ -18,9 +19,10 @@ pr_Card.Drag = function () {
     if (this.Clicked(OS.mouse.leftDown)) {
         this.dragOffset.x = this.x - OS.mouse.x;
         this.dragOffset.y = this.y - OS.mouse.y;
+        this.isSelected = true;
     }
 
-    if (this.Clicked(OS.mouse.left)) {
+    if (this.Clicked(OS.mouse.left) && this.isDragging) {
         this.isDragging = true;
         this.x = OS.mouse.x + this.dragOffset.x;
         this.y = OS.mouse.y + this.dragOffset.y;
@@ -28,6 +30,7 @@ pr_Card.Drag = function () {
 
     if (OS.mouse.leftUp) {
         this.isDragging = false;
+        this.isSelected = false;
     }
 }
 
@@ -60,6 +63,7 @@ var pr_Die = OS.P.Add("Die", 0, 0, "images/sheet_die.png", "images/mask_die.png"
 pr_Die.solid = true;
 
 pr_Die.dragOffset = { x: 0, y: 0 }
+pr_Die.isSelected = false;
 pr_Die.isDragging = false;
 
 pr_Die.hasRolled = false;
@@ -155,11 +159,12 @@ pr_Die.Drag = function () {
     {
         if (this.Clicked(OS.mouse.leftDown))
         {
+            this.isSelected = true;
             this.dragOffset.x = this.x - OS.mouse.x;
             this.dragOffset.y = this.y - OS.mouse.y;
         }
         
-        if (this.Clicked(OS.mouse.left))
+        if (this.Clicked(OS.mouse.left) && this.isSelected)
         {
             this.isDragging = true;
             this.x = OS.mouse.x + this.dragOffset.x;
@@ -168,6 +173,7 @@ pr_Die.Drag = function () {
         
         if (OS.mouse.leftUp) {
             this.isDragging = false;
+            this.isSelected = false;
         }
     }
 }
