@@ -35,7 +35,7 @@ pr_Card.Drag = function () {
 }
 
 pr_Card.IfOverlappingThenMove = function () {
-	var overlappingObject = this.IsOverlapping();
+	var overlappingObject = this.IsOverlapping(true);
 	
 	if (overlappingObject != false)
 	{
@@ -66,7 +66,7 @@ pr_Card.Do = function () {
     this.Click();
 }
 pr_Card.AfterDo = function () {
-	this.IfOverlappingThenMove();
+	this.IfOverlappingThenMove(true);
 	this.KeepInsideRoom();
 }
 

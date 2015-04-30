@@ -1,5 +1,5 @@
-var rm_TitleScreen = new OS.R.Add("Default", OS.camera.width, OS.camera.height, "");
-var rm_GameBoard = new OS.R.Add("Game Board", 2000, OS.camera.height, "");
+var rm_TitleScreen = OS.R.Add("Default", OS.camera.width, OS.camera.height, "");
+var rm_GameBoard = OS.R.Add("Game Board", 2000, OS.camera.height, "");
 
 function loadrooms() {
     OS.AddScript("rooms/default_room.js");

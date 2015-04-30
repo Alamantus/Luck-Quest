@@ -1,12 +1,20 @@
-var ani_dieRoll = OS.A.Add("Roll Die", 150, 150, 6, 1, 0.075, 0, 0);
-var ani_die1 = OS.A.Add("Die Side 1", 150, 150, 1, 1, 0, 150 * 0, 0);
-var ani_die2 = OS.A.Add("Die Side 2", 150, 150, 1, 1, 0, 150 * 1, 0);
-var ani_die3 = OS.A.Add("Die Side 3", 150, 150, 1, 1, 0, 150 * 2, 0);
-var ani_die4 = OS.A.Add("Die Side 4", 150, 150, 1, 1, 0, 150 * 3, 0);
-var ani_die5 = OS.A.Add("Die Side 5", 150, 150, 1, 1, 0, 150 * 4, 0);
-var ani_die6 = OS.A.Add("Die Side 6", 150, 150, 1, 1, 0, 150 * 5, 0);
+// var ani_dieRoll = OS.A.Add("Roll Die", 150, 150, 6, 1, 0.075, 0, 0);
+// var ani_die1 = OS.A.Add("Die Side 1", 150, 150, 1, 1, 0, 150 * 0, 0);
+// var ani_die2 = OS.A.Add("Die Side 2", 150, 150, 1, 1, 0, 150 * 1, 0);
+// var ani_die3 = OS.A.Add("Die Side 3", 150, 150, 1, 1, 0, 150 * 2, 0);
+// var ani_die4 = OS.A.Add("Die Side 4", 150, 150, 1, 1, 0, 150 * 3, 0);
+// var ani_die5 = OS.A.Add("Die Side 5", 150, 150, 1, 1, 0, 150 * 4, 0);
+// var ani_die6 = OS.A.Add("Die Side 6", 150, 150, 1, 1, 0, 150 * 5, 0);
+var ani_dieRoll = OS.A.Add("Roll Die", 50, 50, 6, 1, 0.075, 0, 0);
+var ani_die1 = OS.A.Add("Die Side 1", 50, 50, 1, 1, 0, 50 * 0, 0);
+var ani_die2 = OS.A.Add("Die Side 2", 50, 50, 1, 1, 0, 50 * 1, 0);
+var ani_die3 = OS.A.Add("Die Side 3", 50, 50, 1, 1, 0, 50 * 2, 0);
+var ani_die4 = OS.A.Add("Die Side 4", 50, 50, 1, 1, 0, 50 * 3, 0);
+var ani_die5 = OS.A.Add("Die Side 5", 50, 50, 1, 1, 0, 50 * 4, 0);
+var ani_die6 = OS.A.Add("Die Side 6", 50, 50, 1, 1, 0, 50 * 5, 0);
 
-var pr_Die = OS.P.Add("Die", 0, 0, "images/sheet_die.png", "images/mask_die.png", [ani_dieRoll, ani_die1, ani_die2, ani_die3, ani_die4, ani_die5, ani_die6]);
+// var pr_Die = OS.P.Add("Die", 0, 0, "images/sheet_die.png", "images/mask_die.png", [ani_dieRoll, ani_die1, ani_die2, ani_die3, ani_die4, ani_die5, ani_die6]);
+var pr_Die = OS.P.Add("Die", 0, 0, "images/sheet_die_small.png", "images/mask_die_small.png", [ani_dieRoll, ani_die1, ani_die2, ani_die3, ani_die4, ani_die5, ani_die6]);
 pr_Die.solid = true;
 
 pr_Die.dragOffset = { x: 0, y: 0 }
@@ -166,6 +174,8 @@ pr_Die.AfterDo = function ()
     this.SetSideImage();
     
     this.BounceInsideCamera();
+    this.IfOverlappingThenMove(true);
+    this.KeepInsideRoom();
     /* if (this.MouseIsOver() && !this.isRolling)
     {
         if (this.hasRolled)

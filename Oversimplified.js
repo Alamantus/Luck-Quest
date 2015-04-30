@@ -832,24 +832,41 @@ Oversimplified.GameObject.prototype.PointOverlaps = function (x, y) {
 }
 
 // Check if object is overlapping any other object in the room
-Oversimplified.GameObject.prototype.IsOverlapping = function () {
-    var currentRoom = Oversimplified.R[Oversimplified.R.currentRoom];
+Oversimplified.GameObject.prototype.IsOverlapping = function (doSimple) {
+    doSimple = (typeof doSimple !== 'undefined') ? doSimple : false;
     
     for (var obj in Oversimplified.O) {
         var object = Oversimplified.O[obj];
         if (object != this) {
-            for (var i = 0; i < 2 * object.xBound; i++) {
-                for (var j = 0; j < 2 * object.yBound; j++) {
-                    var xToCheck = (object.x - object.xBound) + i;
-                    var yToCheck = (object.y - object.yBound) + j;
-                    
-                    if (xToCheck > this.x - this.xBound
-                        && xToCheck < this.x + this.xBound
-                        && yToCheck > this.y - this.yBound
-                        && yToCheck < this.y + this.yBound)
-                    {    //Check if the point lies inside the bounds of ANY object in the room.
-                        return object;
+            if (!doSimple)
+            {
+                for (var i = 0; i < 2 * object.xBound; i++) {
+                    for (var j = 0; j < 2 * object.yBound; j++) {
+                        var xToCheck = (object.x - object.xBound) + i;
+                        var yToCheck = (object.y - object.yBound) + j;
+                        
+                        if (xToCheck > this.x - this.xBound &&
+                            xToCheck < this.x + this.xBound &&
+                            yToCheck > this.y - this.yBound &&
+                            yToCheck < this.y + this.yBound)
+                        {    //Check if the point lies inside the bounds of ANY object in the room.
+                            return object;
+                        }
                     }
+                }
+            }
+            else
+            {
+                if (object.PointOverlaps(this.x - this.xBound, this.y - this.yBound) ||
+                    object.PointOverlaps(this.x + this.xBound, this.y - this.yBound) ||
+                    object.PointOverlaps(this.x - this.xBound, this.y + this.yBound) ||
+                    object.PointOverlaps(this.x + this.xBound, this.y + this.yBound) ||
+                    object.PointOverlaps(this.x - this.xBound, this.y) ||
+                    object.PointOverlaps(this.x + this.xBound, this.y) ||
+                    object.PointOverlaps(this.x, this.y - this.yBound) ||
+                    object.PointOverlaps(this.x, this.y + this.yBound))
+                {
+                    return object;
                 }
             }
         }
@@ -858,8 +875,8 @@ Oversimplified.GameObject.prototype.IsOverlapping = function () {
     return false;
 }
 
-Oversimplified.GameObject.prototype.IfOverlappingThenMove = function () {
-	var overlappingObject = this.IsOverlapping();
+Oversimplified.GameObject.prototype.IfOverlappingThenMove = function (doSimple) {
+	var overlappingObject = this.IsOverlapping(doSimple);
 	
 	if (overlappingObject != false)
 	{
