@@ -635,6 +635,8 @@ Oversimplified.GameObject = function (name, x, y, imageSrc, maskImageSrc, animat
     
     this.x = typeof x !== 'undefined' ? x : -1;
     this.y = typeof y !== 'undefined' ? y : -1;
+	this.xPrevious = this.x;
+	this.yPrevious = this.y;
     this.screenX = this.x - Oversimplified.camera.x;
     this.screenY = this.y - Oversimplified.camera.y;
     
@@ -784,6 +786,8 @@ Oversimplified.GameObject.prototype.Start = function () {
 Oversimplified.GameObject.prototype.Update = function () {
     this.screenX = this.x - Oversimplified.camera.x;
     this.screenY = this.y - Oversimplified.camera.y;
+	this.xPrevious = this.x;
+	this.yPrevious = this.y;
     
     this.BeforeDo();
     this.Do();
@@ -844,7 +848,7 @@ Oversimplified.GameObject.prototype.IsOverlapping = function () {
                         && yToCheck > this.y - this.yBound
                         && yToCheck < this.y + this.yBound)
                     {    //Check if the point lies inside the bounds of ANY object in the room.
-                        return true;
+                        return object;
                     }
                 }
             }
@@ -852,6 +856,34 @@ Oversimplified.GameObject.prototype.IsOverlapping = function () {
     }
     
     return false;
+}
+
+Oversimplified.GameObject.prototype.IfOverlappingThenMove = function () {
+	var overlappingObject = this.IsOverlapping();
+	
+	if (overlappingObject != false)
+	{
+		if (this.x < overlappingObject.x)
+		this.x--;
+		if (this.x >= overlappingObject.x)
+			this.x++;
+		if (this.y < overlappingObject.y)
+			this.y--;
+		if (this.y >= overlappingObject.y)
+			this.y++;
+	}
+}
+
+Oversimplified.GameObject.prototype.KeepInsideRoom = function () {
+    var currentRoom = Oversimplified.R[Oversimplified.R.currentRoom]
+	if (this.x < this.xBound || this.x > currentRoom.width - this.xBound)
+    {
+        this.x = this.xPrevious;
+    }
+    if (this.y < this.yBound || this.y > currentRoom.height - this.yBound)
+    {
+        this.y = this.yPrevious;
+    }
 }
 
 // Returns true if the mouse is within the object's bounding box.
